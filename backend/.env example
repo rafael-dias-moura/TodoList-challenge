@@ -1,0 +1,1 @@
+DATABASE_URL = mongodb+srv://dias416:03VzqySJefBj49Dy@apicluster.wpfrn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
