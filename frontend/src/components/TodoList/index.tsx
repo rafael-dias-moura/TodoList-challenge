@@ -8,6 +8,7 @@ interface Props {
   key: string;
   completeTodo:(_id: string) => void;
   deleteTodo: (_id: string) => void;
+  
 }
 
 const TodoList: FC<Props> = ({ todo, key, completeTodo, deleteTodo }: Props) => {

@@ -5,10 +5,39 @@ import TodoForm from "./components/TodoForm";
 
 import "./App.css";
 import TodoList from "./components/TodoList";
+import TodoFilter from "./components/TodoFilter";
 
 const App: FC = () => {
     const [todoList, setTodoList] = useState<ITodo[]>([]);
+               
+    let [selectedFilter, setSelectedFilter] = useState("active");
+    let selectedTodos: ITodo[] = [];
 
+    if (selectedFilter === "done") {
+        selectedTodos = todoList.filter((todo) => todo["completed"] === true);
+      } else if (selectedFilter === "active") {
+        selectedTodos = todoList.filter((todo) => todo["completed"] === false);
+      } else {
+        selectedTodos = todoList;
+      }
+    
+      const applyFilter = (value:string) => {
+        setSelectedFilter(value);
+      };
+    /* 
+        let selectedTodos: ITodo[] = [];
+
+        const applyFilter = (selectedFilter: string) => {
+        if (selectedFilter === "done") {
+        selectedTodos = todoList.filter((todo) => todo["completed"] === true);
+      } else if (selectedFilter === "active") {
+        selectedTodos = todoList.filter((todo) => todo["completed"] === false);
+      } else {
+        selectedTodos = todoList;
+      }
+     console.log(selectedTodos)
+    } */
+        
     function getList() {
         axios.get('http://localhost:3001/').then((res) => setTodoList(res.data));
     }
@@ -43,7 +72,6 @@ const App: FC = () => {
                         : task
             )
         );
-        alert("Nice job!"); 
     };
 
     const deleteTodo = async (_id: string): Promise<void> => {
@@ -55,25 +83,27 @@ const App: FC = () => {
                 task._id !== _id ? task : null
             )
         );
-        alert("Todo deleted successfully!");
     };
-
     useEffect(() => {
         getList()
     }, [])
+    
     return (
         <div className="app">
 
             <div className="container">
-                <TodoForm addTodo={addTodo} />
+                <TodoForm addTodo={addTodo}/> 
+                <TodoFilter applyFilter={applyFilter} />             
                 <div className="todoList">
                     {
-                        todoList.map((todo) => {
-                            return (<TodoList
+                        selectedTodos.map((todo) => {
+                            return (
+                            <TodoList
                                 todo={todo}
                                 key={todo._id}
                                 completeTodo={completeTodo}
                                 deleteTodo={deleteTodo}
+                                
                             />);
                         })}
                 </div>
